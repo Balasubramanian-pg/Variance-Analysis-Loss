@@ -97,5 +97,3 @@ These are specialized classifications for General Ledger accounts:
 - **Production Analysis**: Use **P** accounts to track variance (e.g., actual vs. standard costs).
 - **Multi-Currency**: **X** accounts ensure accurate valuation in global operations.
 - **Non-Financial Tracking**: **N** accounts supplement financial data (e.g., machine hours).
-
-Need help mapping these to your processes? Let me know!
