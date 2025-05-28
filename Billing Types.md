@@ -58,5 +58,90 @@ Since these are **custom**, their definitions vary by company. To confirm:
 
 ---
 
-### **Need Further Clarification?**  
-Provide a sample billing document (`VF03`), and I can trace how a specific `Z*` type is used in your system!
+### **Okay but Relevnace?**  
+Since you're focused on **production usage variance** and **`ZWH1`** appears to be the only billing type directly tied to warehouse/production movements (likely for **stock transfers** or **production-related billing**), here’s how to determine if it’s the only relevant type for your analysis—and how to use it effectively:
+
+---
+
+### **1. Is `ZWH1` the Only Relevant Billing Type for Production Variance?**  
+**Likely yes**, but confirm:  
+- **`ZWH1`** typically bills internal stock movements (e.g., goods issued to production, warehouse transfers).  
+- Other `Z*` types (e.g., `ZPR1`, `ZDI1`) are likely for **sales/customers** and irrelevant to production variance.  
+
+**How to Verify**:  
+1. Run **`V/12`** (Billing Type Config) and check the description of `ZWH1`.  
+   - Look for keywords: *"production," "internal," "stock transfer."*  
+2. Check **table `TVFK`** (Billing Types):  
+   ```SQL
+   SELECT FKART, VTEXT FROM TVFK WHERE FKART = 'ZWH1'.
+   ```
+   - If `VTEXT` mentions "warehouse" or "production," it’s your key type.  
+
+---
+
+### **2. How to Use `ZWH1` for Production Variance Analysis**  
+#### **Step 1: Link Billing Docs to Material Movements**  
+Query to find **goods issues to production** (usage) tied to `ZWH1`:  
+```SQL
+SELECT DISTINCT vbrk.VBELN AS BillingDoc, vbrk.FKDAT AS BillingDate, 
+       mseg.MBLNR AS MaterialDoc, mseg.MATNR AS Material, mseg.MENGE AS Quantity
+FROM VBRK AS vbrk
+JOIN VBRP AS vbrp ON vbrk.VBELN = vbrp.VBELN  -- Billing item
+JOIN MSEG AS mseg ON vbrp.MATNR = mseg.MATNR  -- Material movement
+WHERE vbrk.FKART = 'ZWH1'                     -- Your billing type
+  AND mseg.BWART = '261'                      -- Goods issue to production
+  AND mseg.WERKS = '5001'                     -- Your plant
+```
+
+#### **Step 2: Compare with Standard Costs**  
+Join with **`MBEW`** (Material Valuation) to find variances:  
+```SQL
+SELECT mseg.MATNR, mseg.MENGE AS ActualQty, 
+       mbew.STPRS AS StandardPrice, (mseg.MENGE * mbew.STPRS) AS StandardCost,
+       vbrp.NETWR AS ActualCost,
+       (vbrp.NETWR - (mseg.MENGE * mbew.STPRS)) AS Variance
+FROM MSEG AS mseg
+JOIN MBEW AS mbew ON mseg.MATNR = mbew.MATNR AND mseg.WERKS = mbew.BWKEY
+JOIN VBRP AS vbrp ON mseg.MATNR = vbrp.MATNR
+JOIN VBRK AS vbrk ON vbrp.VBELN = vbrk.VBELN
+WHERE vbrk.FKART = 'ZWH1' 
+  AND mseg.BWART = '261'  -- Goods issue to production
+```
+
+#### **Step 3: Filter for Variance Thresholds**  
+Add a `HAVING` clause to flag significant variances:  
+```SQL
+HAVING ABS(Variance) > 1000  -- Adjust threshold as needed
+```
+
+---
+
+### **3. Why Other `Z*` Types Are Probably Irrelevant**  
+- **`ZPR1`/`ZDI1`**: Likely for **sales orders**—no impact on production.  
+- **`ZDB1`/`ZDR`**: For **down payments**—financial, not usage tracking.  
+- **`ZSCR`**: **Service credits**—unrelated to material consumption.  
+
+**Exception**: If other types involve **internal postings** (e.g., `ZCSD` for service production), verify with your SAP config.  
+
+---
+
+### **4. Pro Tip: Cross-Check with Production Orders**  
+For deeper analysis, link `ZWH1` documents to **production orders** (`AFKO`/`AFPO`):  
+```SQL
+SELECT vbrk.VBELN, mseg.AUFNR AS ProductionOrder, 
+       aufk.KDAUF AS SalesOrder, mseg.MATNR, mseg.MENGE
+FROM VBRK AS vbrk
+JOIN VBRP AS vbrp ON vbrk.VBELN = vbrp.VBELN
+JOIN MSEG AS mseg ON vbrp.MATNR = mseg.MATNR
+JOIN AFKO AS afko ON mseg.AUFNR = afko.AUFNR  -- Production order
+WHERE vbrk.FKART = 'ZWH1'
+```
+
+---
+
+### **Summary**  
+- **Focus on `ZWH1`** for production-related billing.  
+- **Ignore other `Z*` types** unless they explicitly track internal material flows.  
+- **Key Tables**: `VBRK` (billing header), `MSEG` (material movements), `MBEW` (standard costs).  
+
+Need help refining the query for your specific SAP setup? Share a sample data structure, and I’ll adapt it!
