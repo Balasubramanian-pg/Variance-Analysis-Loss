@@ -1,4 +1,4 @@
-Okay, here's a structured list of important SAP tables related to materials, categorized for clarity. This list covers the most frequently used tables, but SAP has many more depending on specific configurations and modules.
+This is a structured list of important SAP tables related to materials, categorized for clarity. This list covers the most frequently used tables, but SAP has many more depending on specific configurations and modules.
 
 **I. Core Material Master Data**
 
