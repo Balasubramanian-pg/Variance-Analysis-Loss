@@ -16,4 +16,3 @@ Here you can find documentation on various SAP concepts and configurations:
 *   [Transactions Types in SAP](Transactions Types in SAP.md)
 *   [Transcation Keys in SAP](Transcation Keys in SAP.md)
 *   [Valuation Area](Valuation Area.md)
-
