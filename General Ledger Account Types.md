@@ -53,5 +53,49 @@ AND TXT50 LIKE '%Production%';
 ```
 
 ---
+Here’s a concise explanation of the GL account type codes **N, P, and X** in SAP:
 
-Need help mapping these to your production variance process? Let me know!
+---
+
+### **SAP GL Account Types (SKB1-KTOKS)**
+These are specialized classifications for General Ledger accounts:
+
+| **Code** | **Account Type**          | **Description**                                                                 | **Common Use Cases**                     |
+|----------|---------------------------|-------------------------------------------------------------------------------|------------------------------------------|
+| **N**    | **Statistical Accounts**  | Used for tracking non-financial quantities (e.g., headcount, kWh). No impact on financial statements. | Internal reporting, KPIs                 |
+| **P**    | **Primary Cost/Revenue**  | Core P&L accounts for costs/revenues. Directly impacts profit calculations.    | Production costs, sales revenue          |
+| **X**    | **Foreign Currency**      | Accounts specifically for transactions in foreign currencies. Requires exchange rate handling. | Import/export, multi-currency operations |
+
+---
+
+### **Key Details**
+1. **Statistical Accounts (N)**:
+   - Purely informational (e.g., track production output units alongside financial data).
+   - Configured in **`OBC4`** (Statistical Key Figures).
+
+2. **Primary Cost/Revenue (P)**:
+   - Critical for P&L reporting (e.g., `500000` = Raw Material Costs).
+   - Linked to cost elements in CO (Table `CSKB`).
+
+3. **Foreign Currency (X)**:
+   - Balances are stored in both local and foreign currency.
+   - Requires exchange rate tables (e.g., `TCURR`).
+
+---
+
+### **How to Verify**
+- **Transaction `FS00`**: Check the "Account Type" field for any G/L account.
+- **Table `SKB1`**:
+  ```SQL
+  SELECT SAKNR, KTOKS, TXT50 FROM SKB1 
+  WHERE KTOKS IN ('N', 'P', 'X') AND BUKRS = '1000'.
+  ```
+
+---
+
+### **Why This Matters**
+- **Production Analysis**: Use **P** accounts to track variance (e.g., actual vs. standard costs).
+- **Multi-Currency**: **X** accounts ensure accurate valuation in global operations.
+- **Non-Financial Tracking**: **N** accounts supplement financial data (e.g., machine hours).
+
+Need help mapping these to your processes? Let me know!
