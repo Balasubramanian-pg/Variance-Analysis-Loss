@@ -5,14 +5,14 @@ Before you begin to create those dashboards, here are few thing about SAP You ab
 
 Here you can find documentation on various SAP concepts and configurations:
 
-*   [Billing Types](Billing%20Types.md)
-*   [Business Transaction Indicators in SAP](Business%20Transaction%20Indicators%20in%20SAP.md)
-*   [Core SAP Account Types](Core%20SAP%20Account%20Types.md)
-*   [Documents Types in SAP](Documents%20Types%20in%20SAP.md)
-*   [Formulas](Formulas.md) <!-- This one was working, so it likely doesn't have spaces or is named exactly "Formulas.md" -->
-*   [General Ledger Account Types](General%20Ledger%20Account%20Types.md)
-*   [README](README.md) <!-- This will link to the README file itself, no spaces in filename -->
-*   [Tables in SAP](Tables%20in%20SAP.md)
-*   [Transactions Types in SAP](Transactions%20Types%20in%20SAP.md)
-*   [Transcation Keys in SAP](Transcation%20Keys%20in%20SAP.md) <!-- Still check if "Transcation" is a typo and should be "Transaction" in your actual filename -->
-*   [Valuation Area](Valuation%20Area.md)
+*   [Billing Types](1.Documentation/Billing%20Types.md)
+*   [Business Transaction Indicators in SAP](1.Documentation/Business%20Transaction%20Indicators%20in%20SAP.md)
+*   [Core SAP Account Types](1.Documentation/Core%20SAP%20Account%20Types.md)
+*   [Documents Types in SAP](1.Documentation/Documents%20Types%20in%20SAP.md)
+*   [Formulas](1.Documentation/Formulas.md)
+*   [General Ledger Account Types](1.Documentation/General%20Ledger%20Account%20Types.md)
+*   [README](README.md) <!-- This link remains the same as README.md is still in the root -->
+*   [Tables in SAP](1.Documentation/Tables%20in%20SAP.md)
+*   [Transactions Types in SAP](1.Documentation/Transactions%20Types%20in%20SAP.md)
+*   [Transcation Keys in SAP](1.Documentation/Transcation%20Keys%20in%20SAP.md) <!-- Still check that "Transcation" filename -->
+*   [Valuation Area](1.Documentation/Valuation%20Area.md)
